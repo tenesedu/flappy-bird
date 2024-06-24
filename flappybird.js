@@ -43,11 +43,6 @@ window.onload = function() {
     board.width = boardWidth;
     context = board.getContext("2d"); //used for drawing on the board
 
-    //draw flappy bird
-    // context.fillStyle = "green";
-    // context.fillRect(bird.x, bird.y, bird.width, bird.height);
-
-    //load images
     birdImg = new Image();
     birdImg.src = "./hotdog.png";
     birdImg.onload = function() {
@@ -56,14 +51,41 @@ window.onload = function() {
 
     topPipeImg = new Image();
     topPipeImg.src = "./toppipe.png";
-
     bottomPipeImg = new Image();
     bottomPipeImg.src = "./bottompipe.png";
 
     requestAnimationFrame(update);
     setInterval(placePipes, 1500); //every 1.5 seconds
     document.addEventListener("keydown", moveBird);
+
+    // Add touch event listener
+    board.addEventListener("touchstart", handleTouch, false);
 }
+
+function handleTouch(e) {
+    e.preventDefault(); // Prevent the default touch behavior like scrolling
+    jumpBird(); // Call the same function that handles the jump
+}
+
+function jumpBird() {
+    //jump
+    velocityY = -6;
+
+    //reset game if it's over
+    if (gameOver) {
+        bird.y = birdY;
+        pipeArray = [];
+        score = 0;
+        gameOver = false;
+    }
+}
+
+function moveBird(e) {
+    if (e.code == "Space" || e.code == "ArrowUp" || e.code == "KeyX") {
+        jumpBird();
+    }
+}
+
 
 function update() {
     requestAnimationFrame(update);
