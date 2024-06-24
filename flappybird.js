@@ -56,15 +56,15 @@ window.onload = function() {
 
     requestAnimationFrame(update);
     setInterval(placePipes, 1500); //every 1.5 seconds
-    document.addEventListener("keydown", moveBird);
 
-    // Add touch event listener
-    board.addEventListener("touchstart", handleTouch, false);
-}
-
-function handleTouch(e) {
-    e.preventDefault(); // Prevent the default touch behavior like scrolling
-    jumpBird(); // Call the same function that handles the jump
+    // Listen for keydown and click events
+    document.addEventListener("keydown", function(e) {
+        if (e.code == "Space") {
+            jumpBird();
+        }
+    });
+    board.addEventListener("click", jumpBird, false);
+  
 }
 
 function jumpBird() {
@@ -80,11 +80,6 @@ function jumpBird() {
     }
 }
 
-function moveBird(e) {
-    if (e.code == "Space" || e.code == "ArrowUp" || e.code == "KeyX") {
-        jumpBird();
-    }
-}
 
 
 function update() {
