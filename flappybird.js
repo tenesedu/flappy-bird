@@ -41,13 +41,13 @@ window.onload = function() {
     board = document.getElementById("board");
     board.height = boardHeight;
     board.width = boardWidth;
-    context = board.getContext("2d"); //used for drawing on the board
+    context = board.getContext("2d");
 
     birdImg = new Image();
     birdImg.src = "./hotdog.png";
     birdImg.onload = function() {
         context.drawImage(birdImg, bird.x, bird.y, bird.width, bird.height);
-    }
+    };
 
     topPipeImg = new Image();
     topPipeImg.src = "./toppipe.png";
@@ -55,17 +55,21 @@ window.onload = function() {
     bottomPipeImg.src = "./bottompipe.png";
 
     requestAnimationFrame(update);
-    setInterval(placePipes, 1500); //every 1.5 seconds
+    setInterval(placePipes, 1500); // Place pipes every 1.5 seconds
 
-    // Listen for keydown and click events
+    // Add event listeners
     document.addEventListener("keydown", function(e) {
         if (e.code == "Space") {
-            jumpBird();
+            jumpOrReset();
         }
     });
-    board.addEventListener("click", jumpBird, false);
-  
-}
+    board.addEventListener("click", jumpOrReset, false);
+    board.addEventListener("touchstart", function(e) {
+        e.preventDefault(); // Prevent default touch actions like scrolling
+        console.log("Touch event triggered"); // Debug: Check if touch is detected
+        jumpOrReset();
+    }, false);
+};
 
 function jumpBird() {
     //jump
@@ -79,12 +83,29 @@ function jumpBird() {
         gameOver = false;
     }
 }
+function resetGame() {
+    console.log("Resetting game."); // Debug: Confirm game reset
+    bird.y = birdY;
+    pipeArray = [];
+    score = 0;
+    gameOver = false;
+    velocityY = 0; // Ensure bird's vertical velocity is reset
+}
+function jumpOrReset() {
+    console.log("jumpOrReset called, gameOver status:", gameOver); // Debug: Check method call and game over status
+    if (gameOver) {
+        resetGame();
+    } else {
+        velocityY = -6; // Bird jump
+    }
+}
 
 
 
 function update() {
     requestAnimationFrame(update);
     if (gameOver) {
+        console.log("Game is over, waiting for reset."); // Debug: Check game over status
         return;
     }
     context.clearRect(0, 0, board.width, board.height);
